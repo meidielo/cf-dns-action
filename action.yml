@@ -1,0 +1,67 @@
+name: 'Cloudflare DNS + Netlify Custom Domain'
+description: 'Register a custom domain in Netlify and create/update a matching Cloudflare CNAME record. Idempotent.'
+author: 'Meidie'
+branding:
+  icon: 'globe'
+  color: 'blue'
+
+inputs:
+  subdomain:
+    description: 'Subdomain to create (e.g., "myapp" -> myapp.<domain>). Must match ^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$.'
+    required: true
+  domain:
+    description: 'Apex domain. Defaults to mdpstudio.com.au.'
+    required: false
+    default: 'mdpstudio.com.au'
+  netlify-site-id:
+    description: 'Netlify site API ID (Site settings -> General -> Site details -> Site ID).'
+    required: true
+  netlify-auth-token:
+    description: 'Netlify personal access token. Treat as highly sensitive.'
+    required: true
+  cf-zone-id:
+    description: 'Cloudflare Zone ID for the apex domain (32 hex chars).'
+    required: true
+  cf-api-token:
+    description: 'Cloudflare API token scoped to Zone -> DNS -> Edit on the target zone only.'
+    required: true
+  proxied:
+    description: 'Enable Cloudflare proxying (orange cloud). Default false; orange cloud breaks Netlify LE HTTP-01 cert issuance.'
+    required: false
+    default: 'false'
+  create-only:
+    description: 'If true, fails instead of updating an existing record that points somewhere else.'
+    required: false
+    default: 'false'
+  dry-run:
+    description: 'If true, logs intended changes but performs no writes.'
+    required: false
+    default: 'false'
+  wait-for-cert:
+    description: 'If true, poll Netlify SSL endpoint until cert is provisioned before returning. Useful when downstream steps hit the FQDN over HTTPS.'
+    required: false
+    default: 'false'
+  cert-timeout-seconds:
+    description: 'Max seconds to wait for SSL provisioning. Ignored unless wait-for-cert=true. Range 10-900, default 180.'
+    required: false
+    default: '180'
+
+outputs:
+  fqdn:
+    description: 'Fully-qualified domain name (e.g., myapp.mdpstudio.com.au).'
+  cf-record-id:
+    description: 'Cloudflare DNS record ID (empty on dry-run if record does not exist).'
+  cf-action:
+    description: 'One of: created | updated | noop | skipped.'
+  netlify-action:
+    description: 'One of: attached | already-attached | skipped.'
+  netlify-url:
+    description: 'The <site>.netlify.app URL for the target Netlify site.'
+  ssl-state:
+    description: 'Final SSL cert state (e.g., "provisioned", "provisioning"). Empty unless wait-for-cert=true.'
+  ssl-provisioned:
+    description: 'true/false — whether SSL was provisioned within the timeout. Empty unless wait-for-cert=true.'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

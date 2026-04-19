@@ -1,0 +1,44 @@
+# Drop this at .github/workflows/dns.yml in a consuming project repo.
+# Assumes Netlify's git integration handles the actual build + deploy. This
+# workflow only wires up the custom domain + DNS; it runs in parallel with
+# Netlify's deploy, not instead of it.
+
+name: Sync DNS
+
+on:
+  push:
+    branches: [main]
+  # Allow manual runs if DNS drifts.
+  workflow_dispatch:
+
+concurrency:
+  group: dns-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Register custom domain + create CNAME
+        id: dns
+        uses: meidielo/cf-dns-action@v1
+        with:
+          subdomain: myapp                 # myapp.mdpstudio.com.au
+          netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
+          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          cf-zone-id: ${{ secrets.CF_ZONE_ID }}
+          cf-api-token: ${{ secrets.CF_API_TOKEN }}
+          # proxied: false             # default; leave for Netlify LE
+          # create-only: false         # flip to true in prod if you want drift to fail loud
+          # dry-run: false             # flip to true to plan without writing
+          # wait-for-cert: true        # block until SSL provisioned (~30-90s). Enable if a
+                                       # later step needs HTTPS to work.
+          # cert-timeout-seconds: 180  # default; range 10-900. Timeout is warning, not fail.
+
+      - name: Summarise
+        run: |
+          echo "FQDN:            ${{ steps.dns.outputs.fqdn }}"
+          echo "CF action:       ${{ steps.dns.outputs.cf-action }}"
+          echo "NL action:       ${{ steps.dns.outputs.netlify-action }}"
+          echo "SSL state:       ${{ steps.dns.outputs.ssl-state }}"
+          echo "SSL provisioned: ${{ steps.dns.outputs.ssl-provisioned }}"
