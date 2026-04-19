@@ -9,6 +9,28 @@ updates:
         dependency-type: "development"
       production-dependencies:
         dependency-type: "production"
+    # Scoped ignores: allow minor + patch (where security fixes land) but
+    # defer major bumps that require migration work.
+    ignore:
+      # Blocked on ncc CJS -> ESM bundle migration (v1.1.0 scope).
+      - dependency-name: "@actions/core"
+        update-types: ["version-update:semver-major"]
+      # zod v4 has breaking API changes; migration pending.
+      - dependency-name: "zod"
+        update-types: ["version-update:semver-major"]
+      # Blocked on eslint flat-config migration (.eslintrc.cjs -> eslint.config.js).
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@typescript-eslint/eslint-plugin"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@typescript-eslint/parser"
+        update-types: ["version-update:semver-major"]
+      # TypeScript 6 is a real breaking change; defer until actively planned.
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+      # @types/node major should track the engines.node runtime (currently 20).
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
