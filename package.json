@@ -21,7 +21,7 @@
     "custom-domain",
     "idempotent"
   ],
-  "author": "Meidie",
+  "author": "Meidie Fei",
   "license": "MIT",
   "engines": {
     "node": ">=20"

@@ -1,6 +1,6 @@
 name: 'Cloudflare DNS + Netlify Custom Domain'
 description: 'Register a custom domain in Netlify and create/update a matching Cloudflare CNAME record. Idempotent.'
-author: 'Meidie'
+author: 'Meidie Fei'
 branding:
   icon: 'globe'
   color: 'blue'
