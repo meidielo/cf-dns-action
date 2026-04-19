@@ -18,13 +18,6 @@ updates:
       # zod v4 has breaking API changes; migration pending.
       - dependency-name: "zod"
         update-types: ["version-update:semver-major"]
-      # Blocked on eslint flat-config migration (.eslintrc.cjs -> eslint.config.js).
-      - dependency-name: "eslint"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "@typescript-eslint/eslint-plugin"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "@typescript-eslint/parser"
-        update-types: ["version-update:semver-major"]
       # TypeScript 6 is a real breaking change; defer until actively planned.
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
@@ -36,3 +29,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      # v3 requires Node 24 action runtime. Revisit once Node 24 is confirmed
+      # standard on ubuntu-latest (https://github.com/actions/runner-images).
+      - dependency-name: "softprops/action-gh-release"
+        update-types: ["version-update:semver-major"]
