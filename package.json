@@ -27,8 +27,8 @@
     "node": ">=20"
   },
   "dependencies": {
-    "@actions/core": "^2.0.3",
-    "zod": "^3.23.8"
+    "@actions/core": "^3.0.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
