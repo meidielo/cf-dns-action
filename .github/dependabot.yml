@@ -24,6 +24,12 @@ updates:
       # @types/node major should track the engines.node runtime (currently 20).
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
+      # eslint 10 just landed (2026-04); no urgency, stability first.
+      # Revisit once the 10.x line has a couple of patch releases.
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "@eslint/js"
+        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
