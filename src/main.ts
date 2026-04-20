@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import * as core from '@actions/core';
 import { parseInputs, buildFqdn } from './config';
 import { CloudflareClient } from './cloudflare';
@@ -78,6 +79,8 @@ export async function run(): Promise<void> {
 }
 
 // Only auto-run when this file is the entrypoint (matters for tests + ncc bundling).
-if (require.main === module) {
+// ESM equivalent of the CJS `require.main === module` idiom; the latter gets
+// transpiled to eval('__filename') by ncc, which ReferenceErrors in ESM scope.
+if (process.argv[1] && process.argv[1] === fileURLToPath(import.meta.url)) {
   void run();
 }
