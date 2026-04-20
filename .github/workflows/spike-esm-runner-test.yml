@@ -1,0 +1,32 @@
+name: spike-esm-runner-test
+
+# Throwaway workflow for the ESM migration spike. Proves ncc-auto-ESM bundle
+# loads on ubuntu-latest and executes the Action end-to-end against real APIs.
+# Delete along with the spike/esm branch once findings are recorded.
+
+on:
+  # Push trigger scoped to this branch fires once on first push — works around
+  # GitHub's requirement that workflow_dispatch targets exist on the default
+  # branch. Keeps main clean of throwaway spike config.
+  push:
+    branches: [spike/esm]
+  workflow_dispatch:
+    inputs:
+      subdomain:
+        description: Throwaway subdomain for spike (e.g. esm-spike-20260420)
+        required: false
+        default: esm-spike-20260420
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: ./
+        with:
+          subdomain: ${{ inputs.subdomain || 'esm-spike-20260420' }}
+          netlify-site-id: ${{ secrets.NETLIFY_SITE_ID }}
+          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          cf-zone-id: ${{ secrets.CF_ZONE_ID }}
+          cf-api-token: ${{ secrets.CF_API_TOKEN }}
+          dry-run: 'false'
