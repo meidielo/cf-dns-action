@@ -21,7 +21,7 @@ updates:
       # TypeScript 6 is a real breaking change; defer until actively planned.
       - dependency-name: "typescript"
         update-types: ["version-update:semver-major"]
-      # @types/node major should track the engines.node runtime (currently 20).
+      # @types/node major should track the engines.node runtime (currently 24).
       - dependency-name: "@types/node"
         update-types: ["version-update:semver-major"]
       # eslint 10 just landed (2026-04); no urgency, stability first.

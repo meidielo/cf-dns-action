@@ -63,5 +63,5 @@ outputs:
     description: 'true/false — whether SSL was provisioned within the timeout. Empty unless wait-for-cert=true.'
 
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
