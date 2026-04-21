@@ -2,7 +2,9 @@ name: Auto-build dist
 
 # When source changes land on main without a corresponding dist/ update, rebuild
 # and commit. CI's dist-drift check fails PRs that skip this; this workflow is
-# the safety net for direct pushes to main.
+# the safety net for direct pushes to main. `workflow_dispatch` also lets it be
+# run against a PR branch to fix cross-platform sourcemap drift (e.g. when dist/
+# was built on Windows and CI runs on Linux).
 on:
   push:
     branches: [main]
@@ -11,6 +13,7 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - 'tsconfig.json'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -26,7 +29,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - run: npm ci

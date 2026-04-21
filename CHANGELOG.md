@@ -2,6 +2,18 @@
 
 All notable changes to this project are documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versioning: [SemVer](https://semver.org/).
 
+## [1.0.2] - 2026-04-21
+
+### Changed
+- Action runtime `node20` → `node24` (`action.yml`). GitHub is retiring Node 20 for JavaScript actions; consumers on `@v1` / `@v1.0.2` move automatically on the next run.
+- `engines.node` `>=20` → `>=24`; `@types/node` `^20.14.0` → `^24.0.0`.
+- CI, release, and auto-build-dist workflows pin `actions/setup-node` to Node 24 so the `dist/` bundle is produced on the same runtime it executes on.
+- Dependabot comment updated to track `engines.node` = 24.
+
+### Note
+- Consumers can validate on Node 24 ahead of the GitHub rollout by running a workflow with `env: FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true` — this forces the runner to execute JS actions on Node 24 regardless of the `using:` declaration.
+- Deadline for Node 20 action runtime retirement: 2026-06-02.
+
 ## [1.0.1] - 2026-04-19
 
 ### Security
